@@ -24,7 +24,12 @@ class RegressionTester(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+        elif hasattr(torch, 'xpu') and torch.xpu.is_available():
+            device = torch.device("xpu")
+        else:
+            device = torch.device("cpu")
         cache = os.path.expanduser('~/.boltz')
         checkpoint_url = MODEL_URL
         model_name = checkpoint_url.split("/")[-1]

@@ -518,9 +518,9 @@ def cli() -> None:
 )
 @click.option(
     "--accelerator",
-    type=click.Choice(["gpu", "cpu", "tpu"]),
-    help="The accelerator to use for prediction. Default is gpu.",
-    default="gpu",
+    type=click.Choice(["gpu", "cpu", "tpu", "xpu", "auto"]),
+    help="The accelerator to use for prediction. Default is auto.",
+    default="auto",
 )
 @click.option(
     "--recycling_steps",
@@ -724,8 +724,9 @@ def predict(
     diffusion_params = BoltzDiffusionParams()
     diffusion_params.step_scale = step_scale
 
-    pairformer_args = PairformerArgs(use_trifast=(accelerator != "cpu"))
-    msa_module_args = MSAModuleArgs(use_trifast=(accelerator != "cpu"))
+    _use_trifast = accelerator == "gpu" or (accelerator == "auto" and torch.cuda.is_available())
+    pairformer_args = PairformerArgs(use_trifast=_use_trifast)
+    msa_module_args = MSAModuleArgs(use_trifast=_use_trifast)
 
     steering_args = BoltzSteeringParams()
     if no_potentials:

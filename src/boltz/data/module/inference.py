@@ -265,7 +265,7 @@ class BoltzInferenceDataModule(pl.LightningDataModule):
             dataset,
             batch_size=1,
             num_workers=self.num_workers,
-            pin_memory=True,
+            pin_memory=torch.cuda.is_available(),
             shuffle=False,
             collate_fn=collate,
         )

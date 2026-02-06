@@ -1,5 +1,5 @@
 trainer:
-  accelerator: gpu
+  accelerator: auto
   devices: 1
   precision: 32
   gradient_clip_val: 10.0

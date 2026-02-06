@@ -37,7 +37,10 @@ def permute_final_dims(tensor: torch.Tensor, inds: List[int]):
 
 def is_fp16_enabled():
     # Autocast world
-    fp16_enabled = torch.get_autocast_gpu_dtype() == torch.float16
+    try:
+        fp16_enabled = torch.get_autocast_gpu_dtype() == torch.float16
+    except RuntimeError:
+        fp16_enabled = False
     fp16_enabled = fp16_enabled and torch.is_autocast_enabled()
 
     return fp16_enabled
